@@ -1,9 +1,29 @@
 Flicker	 KEYWORD1
+////////////////////
+TouchSwitch	 KEYWORD1
 
+setThreshold	 KEYWORD2
 update	 KEYWORD2
-interval	 KEYWORD2
 read	 KEYWORD2
-write	 KEYWORD2
-retrigger	 KEYWORD2
 risingEdge	KEYWORD2
 fallingEdge	KEYWORD2
+duration	 KEYWORD2
+retrigger	 KEYWORD2
+interval	 KEYWORD2
+
+LATCH	 LITERAL1
+MOMENTARY	 LITERAL1
+
+////////////////////
+TouchVariable	 KEYWORD1
+
+setInputRange	 KEYWORD2
+setOutputRange	 KEYWORD2
+setNR	 KEYWORD2
+read	 KEYWORD2
+
+////////////////////
+TouchVelocity	 KEYWORD1
+
+responsiveRead	 KEYWORD2
+
