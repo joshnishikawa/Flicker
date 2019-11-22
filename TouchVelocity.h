@@ -70,11 +70,8 @@ class TouchVelocity{
 
 /*  HOW RESPONSIVE READ WORKS
     
-    First off, I don't think this will ever work for anything like a banana.
-    Use something metal under a thin layer of something non-conductive.
-    
-    Assuming you're using your finger, it will start to change the value of
-    touchRead() before actually making contact with the input.
+    Assuming you're using your finger to trigger the input, it will start to
+    change the value of touchRead() before actually making contact.
     When detected, the function will wait 9 milliseconds for your finger to
     make contact. Your finger might make contact in as fast as 1.6 milliseconds.
     
