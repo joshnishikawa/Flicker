@@ -25,7 +25,6 @@ void TouchVariable::setInputRange(){
   inHi = newValue * 1.7; // Higher values are still possible
   offThreshold = newValue * 1.3; // Just in case the input is multi-tasking
   onThreshold = newValue * 1.5; // Just in case the input is multi-tasking
-  NR = newValue * newValue * 0.0001; // NR stays proportional to the square
 };
 
 void TouchVariable::setInputRange(int inLo, int inHi){
@@ -34,13 +33,15 @@ void TouchVariable::setInputRange(int inLo, int inHi){
   onThreshold = inLo * 1.2; // Just in case the input is multi-tasking
   offThreshold = inLo * 1.1; // Just in case the input is multi-tasking
   this->inLo = inLo; // Values can still go lower unless using setOutputRange()
-  NR = inLo * inLo * 0.0001; // NR stays proportional to the square
 };
 
 
 int TouchVariable::read(){
   int newValue = touchRead(pin);
-  NR = newValue;
+
+  // Determine what percent of touchRead() values the threshold should be.
+  threshold = newValue * (NR/100);
+
   if (adjustInHi){
     // A conservative inHi of 1.7x is set when setInputRange() is called but,
     // the highest reading could be much higher than that. This line adjusts
@@ -55,7 +56,7 @@ int TouchVariable::read(){
   }
   int difference = newValue - balancedValue;
   buffer = newValue == balancedValue ? buffer/2 : buffer + difference;
-  if (buffer*buffer > NR*NR){ // "abs(buffer) > NR" doesn't give me a 0 ???
+  if (buffer*buffer > threshold*threshold){ // "abs(buffer) > NR" doesn't work
     balancedValue = newValue;
 
     buffer = 0;
@@ -70,3 +71,6 @@ void TouchVariable::setOutputRange(int outLo, int outHi){
   mapped = true;
 };
 
+void TouchVariable::setNR(byte amount){
+  this->NR = amount;
+};

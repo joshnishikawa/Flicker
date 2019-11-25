@@ -32,6 +32,9 @@ class TouchVariable{
     // Returns the value of touchRead() with some noise reduction.
     int read();
     
+    // Sets the level of noise reduction. 0 for none, 
+    void setNR(byte amount); // 0 = raw touchRead() values. 100 = maximum NR.
+    
     int inLo, inHi;
     
   protected:
@@ -41,13 +44,15 @@ class TouchVariable{
     int onThreshold, offThreshold;
     int outLo, outHi;
     
-    int buffer = 0; /*Probably a misnomer. Think of this variable as a container
-                      like a capacitor acting as a low-pass filter. */
+    int buffer = 0;   /* Think of this variable as a container like a capacitor
+                        acting as a low-pass filter. */
 
-    int NR;         /*Short for "noise reduction" (probably also a misnomer).
-                    Think of it as the capacitance of the parallel capacitor.
-                    Because higher touchRead() values have greater variance,
-                    setting this to the current touchRead() value works best. */
+    int threshold;    // This would be the variable capacity of the capacitor.
+
+    float NR = 100.0; /* This is the percent of the touchRead() value that will
+                        be used as the threshold. A percent of the touchRead()
+                        value is used because higher touchRead() values have
+                        greater variance, thus requiring more noise reduction.*/
 
     int balancedValue = 0; // The "noise-reduced" output of touchRead()
 
