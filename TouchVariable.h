@@ -35,19 +35,22 @@ class TouchVariable{
     // Sets the level of noise reduction. 0 for none, 
     void setNR(byte amount); // 0 = raw touchRead() values. 100 = maximum NR.
     
-    int inLo, inHi;
+    int inLo = 0;
+    int inHi = 0;
     
   protected:
-    byte pin;
+    byte pin = 0;
     byte mapped = false; // true maps input to a predetermined output range
     byte adjustInHi = true;//false if using setInputRange(int inLo, int inHi)
-    int onThreshold, offThreshold;
-    int outLo, outHi;
+    int onThreshold = 0;
+    int offThreshold = 0;
+    int outLo = 0;
+    int outHi = 0;
     
     int buffer = 0;   /* Think of this variable as a container like a capacitor
                         acting as a low-pass filter. */
 
-    int threshold;    // This would be the variable capacity of the capacitor.
+    int threshold = 0;// This would be the variable capacity of the capacitor.
 
     float NR = 100.0; /* This is the percent of the touchRead() value that will
                         be used as the threshold. A percent of the touchRead()

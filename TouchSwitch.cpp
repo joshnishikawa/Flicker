@@ -18,7 +18,7 @@ TouchSwitch::TouchSwitch(byte pin, byte mode, int onThreshold){
   this->pin = pin;
   latched = mode;
   this->onThreshold = onThreshold;
-  offThreshold = onThreshold / 1.2 * 1.1;
+  offThreshold = onThreshold / 1.3 * 1.2;
 };
 
 TouchSwitch::~TouchSwitch(){};
@@ -26,14 +26,14 @@ TouchSwitch::~TouchSwitch(){};
 
 void TouchSwitch::setThreshold(){
   int newValue = touchRead(pin);
-  onThreshold =  newValue * 1.2; // Threshold for rising edge
-  offThreshold = newValue * 1.1; // Slightly lower for falling edge
+  onThreshold =  newValue * 1.3; // Threshold for rising edge
+  offThreshold = newValue * 1.2; // Slightly lower for falling edge
 }
 
 
 void TouchSwitch::setThreshold(int threshold){
   onThreshold = threshold; // Threshold for rising edge
-  offThreshold = threshold / 1.2 * 1.1; // Slightly lower for falling edge
+  offThreshold = threshold / 1.3 * 1.2; // Slightly lower for falling edge
 }
 
 

@@ -57,13 +57,14 @@ class TouchSwitch{
 
   protected:
     int trigger();
-    byte state;
-    int onThreshold, offThreshold;
-    elapsedMillis held_millis;
+    byte state = 0;
+    int onThreshold = 0;
+    int offThreshold = 0;
+    elapsedMillis held_millis = 0;
     unsigned long previous_millis = 0;
     unsigned long interval_millis = 0;
     unsigned long retrigger_millis = 0;
-    byte pin;
+    byte pin = 0;
     byte latched = false;
     byte waiting = false;
     byte stateChanged = false;
