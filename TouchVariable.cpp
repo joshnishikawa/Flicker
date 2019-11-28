@@ -23,15 +23,15 @@ void TouchVariable::setInputRange(){
   int newValue = touchRead(pin);
   inLo = newValue * 1.02; // Because touchRead() is inaccurate here. ??????
   inHi = newValue * 1.7; // Higher values are still possible
-  offThreshold = newValue * 1.3; // Just in case the input is multi-tasking
-  onThreshold = newValue * 1.5; // Just in case the input is multi-tasking
+  offThreshold = newValue * 1.2; // Just in case the input is multi-tasking
+  onThreshold = newValue * 1.3; // Just in case the input is multi-tasking
 };
 
 void TouchVariable::setInputRange(int inLo, int inHi){
   adjustInHi = false; // Don't increase inHi when getting a higher reading
   this->inHi = inHi; // Values can still go higher unless using setOutputRange()
-  onThreshold = inLo * 1.2; // Just in case the input is multi-tasking
-  offThreshold = inLo * 1.1; // Just in case the input is multi-tasking
+  onThreshold = inLo * 1.3; // Just in case the input is multi-tasking
+  offThreshold = inLo * 1.2; // Just in case the input is multi-tasking
   this->inLo = inLo; // Values can still go lower unless using setOutputRange()
 };
 
