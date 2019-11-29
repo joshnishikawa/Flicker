@@ -1,10 +1,10 @@
 # Flicker
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  FLICKER 2.0 - A library for making capacitive touch easy to use.
  - by Josh Nishikawa (github.com/joshnishikawa/Flicker)
  - The "TouchSwitch" class was adapted from the Bounce library by:
    Thomas O Fredericks, Eric Lowry, Jim Schimpf and Tom Harkaway
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  VERSION LOG
   2.0.2 (current)
   - Fine tuned ON and OFF thresholds for TouchSwitch and TouchVariable
@@ -15,7 +15,7 @@
   - Added the TouchVariable class for stable reading of ranges of input.
   - Added the TouchVelocity class for detecting velocity of changes in input.
   - Started keeping this version log.
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
