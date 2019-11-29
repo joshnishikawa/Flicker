@@ -6,9 +6,10 @@
    Thomas O Fredericks, Eric Lowry, Jim Schimpf and Tom Harkaway
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  VERSION LOG
-  2.0.2 (current)
+2.0.2 (current)
   - Fine tuned ON and OFF thresholds for TouchSwitch and TouchVariable
-  2.0
+
+2.0
   - Changed "Flicker" to "TouchSwitch" ("Flicker" deprecated but still works)
   - Added an option to LATCH the state of a TouchSwitch.
   - Added interval() (still useful even if noise reduction isn't time-based)
@@ -29,4 +30,4 @@
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- MA 02110-1301, USA.*/
+ MA 02110-1301, USA.
