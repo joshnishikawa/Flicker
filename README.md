@@ -10,7 +10,7 @@ VERSION LOG
 2.0.2 (current)
   - Fine tuned ON and OFF thresholds for TouchSwitch and TouchVariable
 
-2.0
+2.0.0
   - Changed "Flicker" to "TouchSwitch" ("Flicker" deprecated but still works)
   - Added an option to LATCH the state of a TouchSwitch.
   - Added interval() (still useful even if noise reduction isn't time-based)
