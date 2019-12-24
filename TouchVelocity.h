@@ -56,10 +56,11 @@ class TouchVelocity{
     //     below touchOffThreshold when responsiveRead() is used
     byte fallingEdge();
 
+    int hoverOnThreshold, hoverOffThreshold, touchOnThreshold, touchOffThreshold;
+
   protected:
     byte pin;
     byte stateChanged;
-    int hoverOnThreshold, hoverOffThreshold, touchOnThreshold, touchOffThreshold;
     int inHi, state, peak;
     int outLo = 1;
     int outHi = 127;

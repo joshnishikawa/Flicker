@@ -5,35 +5,40 @@ TouchSwitch::TouchSwitch(){};
 TouchSwitch::TouchSwitch(byte pin){
   this->pin = pin;
   latched = false;
-  setThreshold(); // only works if creating objects during setup
 };
 
 TouchSwitch::TouchSwitch(byte pin, byte mode){
   this->pin = pin;
   this->latched = mode;
-  setThreshold(); // only works if creating objects during setup
 };
 
 TouchSwitch::TouchSwitch(byte pin, byte mode, int onThreshold){
   this->pin = pin;
   latched = mode;
   this->onThreshold = onThreshold;
-  offThreshold = onThreshold / 1.3 * 1.2;
+  offThreshold = onThreshold / 1.2 * 1.1;
 };
 
 TouchSwitch::~TouchSwitch(){};
 
 
 void TouchSwitch::setThreshold(){
-  int newValue = touchRead(pin);
-  onThreshold =  newValue * 1.3; // Threshold for rising edge
-  offThreshold = newValue * 1.2; // Slightly lower for falling edge
+  int qval = 0;
+  analogRead(A0); // The ADC can affect touch values so fire it up first.
+
+  for (int i = 0; i < 10; i++){ // store the highest quiescent reading of 10
+    int newValue = touchRead(pin);
+    if (newValue > qval) qval = newValue;
+  }
+
+  onThreshold =  qval * 1.2; // Threshold for rising edge
+  offThreshold = qval * 1.1; // Slightly lower for falling edge
 }
 
 
 void TouchSwitch::setThreshold(int threshold){
   onThreshold = threshold; // Threshold for rising edge
-  offThreshold = threshold / 1.3 * 1.2; // Slightly lower for falling edge
+  offThreshold = threshold / 1.2 * 1.1; // Slightly lower for falling edge
 }
 
 

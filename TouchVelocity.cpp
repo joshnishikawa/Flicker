@@ -138,14 +138,18 @@ byte TouchVelocity::fallingEdge(){
 
 
 void TouchVelocity::setThreshold(){
-  int newValue = touchRead(pin);
-  newValue = max(touchRead(pin), newValue);
-  newValue = max(touchRead(pin), newValue); // take the highest of 3 reads
+  int qval = 0;
+  analogRead(A0); // The ADC can affect touch values so fire it up first.
 
-  hoverOnThreshold = newValue * 1.02; // when to start looking for a touch
-  hoverOffThreshold = newValue * 1.01; // when to idle
-  touchOnThreshold = newValue * 1.2; // when touched
-  touchOffThreshold = newValue * 1.1; // when released
+  for (int i = 0; i < 1000; i++){ // store the highest quiescent reading of 1000
+    int newValue = touchRead(pin);
+    if (newValue > qval) qval = newValue;
+  }
+
+  hoverOnThreshold = qval * 1.02; // when to start looking for a touch
+  hoverOffThreshold = qval * 1.01; // when to idle
+  touchOnThreshold = qval * 1.2; // when touched
+  touchOffThreshold = qval * 1.1; // when released
 }
 
 void TouchVelocity::setThreshold(int hoverThreshold, int touchThreshold){
