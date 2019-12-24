@@ -7,7 +7,11 @@ FLICKER 2.0.2 - A library for making capacitive touch easy to use.
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 VERSION LOG
  
-2.0.2 (current)
+2.0.3 (current)
+  - Fixed a but that pushed the quiescent touchRead value above the
+    offThreshold when using the ADC.
+    
+2.0.2
   - Fine tuned ON and OFF thresholds for TouchSwitch and TouchVariable
 
 2.0.0
