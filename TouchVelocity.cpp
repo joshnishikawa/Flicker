@@ -141,7 +141,7 @@ void TouchVelocity::setThreshold(){
   int qval = 0;
   analogRead(A0); // The ADC can affect touch values so fire it up first.
 
-  for (int i = 0; i < 1000; i++){ // store the highest quiescent reading of 1000
+  for (int i = 0; i < 10; i++){ // store the highest quiescent reading of 10
     int newValue = touchRead(pin);
     if (newValue > qval) qval = newValue;
   }

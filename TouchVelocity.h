@@ -4,11 +4,11 @@
 #define TouchVelocity_h
 
 #if defined(__MK20DX128__) || defined(__MK20DX256__) || defined(__MKL26Z64__)
-#define MAX_VELOCITY 3000
+  #define MAX_VELOCITY 3000
 #elif defined(__MK66FX1M0__) || defined(__MK64FX512__)
-#define MAX_VELOCITY 1600
+  #define MAX_VELOCITY 1600
 #else
-#define MAX_VELOCITY 3000
+  #define MAX_VELOCITY 3000
 #endif
 
 class TouchVelocity{

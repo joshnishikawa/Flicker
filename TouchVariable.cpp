@@ -19,11 +19,11 @@ TouchVariable::~TouchVariable(){};
 
 
 void TouchVariable::setInputRange(){
-  this->adjustInHi = true; // Auto adjust inHi if there is a higher reading.
+  adjustInHi = true; // Auto adjust inHi if there is a higher reading.
   int qval = 0;
   analogRead(A0); // The ADC can affect touch values so fire it up first.
 
-  for (int i = 0; i < 1000; i++){ // store the highest quiescent reading of 1000
+  for (int i = 0; i < 10; i++){ // store the highest quiescent reading of 10
     int newValue = touchRead(pin);
     if (newValue > qval) qval = newValue;
   }
@@ -31,7 +31,7 @@ void TouchVariable::setInputRange(){
   inLo = qval * 1.02; // Because touchRead() is inaccurate here. ??????
   inHi = qval * 1.7; // Higher values are still possible
   offThreshold = qval * 1.2; // Just in case the input is multi-tasking
-  onThreshold = qval * 1.3; // Just in case the input is multi-tasking
+  onThreshold = qval * 1.3;  // Just in case the input is multi-tasking
 };
 
 void TouchVariable::setInputRange(int inLo, int inHi){
@@ -78,6 +78,6 @@ void TouchVariable::setOutputRange(int outLo, int outHi){
   mapped = true;
 };
 
-void TouchVariable::setNR(byte amount){
-  this->NR = amount;
+void TouchVariable::setNR(int amount){
+  this->NR = float(amount);
 };
