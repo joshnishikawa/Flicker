@@ -6,15 +6,20 @@ FLICKER - A library for making capacitive touch easy to use.
    Thomas O Fredericks, Eric Lowry, Jim Schimpf and Tom Harkaway
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 VERSION LOG
- 
-2.0.3 (current)
-  - Fixed a but that pushed the quiescent touchRead value above the
+
+1.0.4 (current)
+   - created a library.properties file
+   - made the version number semver compliant (1.0.4 is the first official release)
+   - moved source files into src/
+
+1.0.3
+  - Fixed a bug that pushed the quiescent touchRead value above the
     offThreshold when using the ADC.
     
-2.0.2
+1.0.2
   - Fine tuned ON and OFF thresholds for TouchSwitch and TouchVariable
 
-2.0.0
+1.0.0
   - Changed "Flicker" to "TouchSwitch" ("Flicker" deprecated but still works)
   - Added an option to LATCH the state of a TouchSwitch.
   - Added interval() (still useful even if noise reduction isn't time-based)
