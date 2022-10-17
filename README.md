@@ -1,6 +1,7 @@
 # Flicker
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 FLICKER - A library for making capacitive touch easy to use.
+Includes all the functions found in the Bounce library, smoothes eratic values to make variable input more useful and includes functions for measuring velocity.
  - by Josh Nishikawa (github.com/joshnishikawa/Flicker)
  - The "TouchSwitch" class was adapted from the Bounce library by:
    Thomas O Fredericks, Eric Lowry, Jim Schimpf and Tom Harkaway

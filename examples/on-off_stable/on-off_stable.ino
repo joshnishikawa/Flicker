@@ -3,7 +3,7 @@
 // If you hold your finger on the input,
 // something will happen.
 
-const uint8_t touchPin = 15; // CHOOSE A TOUCH PIN
+const uint8_t touchPin = 17; // CHOOSE A TOUCH PIN
 const uint8_t ledPin = 13;
 TouchSwitch myInput(touchPin);
 
