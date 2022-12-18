@@ -21,7 +21,7 @@ void loop(){
   if (velocity >= 1){
     usbMIDI.sendNoteOn(noteNumber, velocity, 0);
   }
-  if (myInput.fallingEdge()){
+  if (myInput.fell()){
     usbMIDI.sendNoteOff(noteNumber, 0, 0);
   }
 }

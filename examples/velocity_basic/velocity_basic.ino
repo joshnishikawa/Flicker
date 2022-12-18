@@ -21,10 +21,10 @@ void setup() {
 
 void loop(){
   int velocity = myInput.read();
-  if (myInput.fallingEdge()){
+  if (myInput.fell()){
     digitalWrite(LED, HIGH);
   }
-  if (myInput.risingEdge()){
+  if (myInput.rose()){
     digitalWrite(LED, LOW);
   }
   if (velocity >= 1){

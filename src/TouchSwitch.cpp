@@ -62,9 +62,9 @@ int TouchSwitch::read(){
 }
 
 
-byte TouchSwitch::risingEdge() {return stateChanged && state; }
+byte TouchSwitch::rose() {return stateChanged && state; }
 
-byte TouchSwitch::fallingEdge() {return stateChanged && !state; }
+byte TouchSwitch::fell() {return stateChanged && !state; }
 
 
 unsigned long TouchSwitch::duration(){
@@ -82,17 +82,23 @@ void TouchSwitch::interval(unsigned long interval_millis){
   retrigger_millis = 0;
 }
 
+unsigned long TouchSwitch::previousDuration()
+{
+  return durationOfPreviousState;
+}
 
 // Protected: triggers the pin
 int TouchSwitch::trigger(){
   int newValue = touchRead(pin);
+  int current_millis = millis();
 
   if(latched){ // LATCH behavior
     if (newValue >= onThreshold){
       if (waiting && held_millis >= interval_millis){
         state = !state;
         waiting = false;
-        previous_millis = millis();
+        durationOfPreviousState = current_millis - previous_millis;
+        previous_millis = current_millis;
         return 1;
       }
       else{return 0;}
@@ -112,7 +118,8 @@ int TouchSwitch::trigger(){
       if (waiting && held_millis >= interval_millis){
         if (!state){
           state = true;
-          previous_millis = millis();
+          durationOfPreviousState = current_millis - previous_millis;
+          previous_millis = current_millis;
           return 1;
         }
         else{
@@ -132,7 +139,8 @@ int TouchSwitch::trigger(){
       if(waiting && held_millis >= interval_millis){
         if (state){
           state = false;
-          previous_millis = millis();
+          durationOfPreviousState = current_millis - previous_millis;
+          previous_millis = current_millis;
           return 1;
         }
         else{
@@ -145,8 +153,7 @@ int TouchSwitch::trigger(){
           waiting = true;
           return 0;
         }
-        else{return 0;
-        }
+        else{return 0;}
       }
     }
     else{

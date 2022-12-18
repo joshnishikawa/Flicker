@@ -44,8 +44,8 @@ class TouchVariable{
     
   protected:
     byte pin = 0;
-    byte mapped = false; // true maps input to a predetermined output range
-    byte adjustInHi = true;//false if using setInputRange(int inLo, int inHi)
+    bool mapped = false; // true maps input to a predetermined output range
+    bool adjustInHi = true;//false if using setInputRange(int inLo, int inHi)
     
     int buffer = 0;   /* Think of this variable as a container like a capacitor
                         acting as a low-pass filter. */

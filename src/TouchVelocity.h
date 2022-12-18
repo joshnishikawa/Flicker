@@ -60,7 +60,7 @@ class TouchVelocity{
 
   protected:
     byte pin;
-    byte stateChanged;
+    bool stateChanged;
     int inHi, state, peak;
     int outLo = 1;
     int outHi = 127;

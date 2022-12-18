@@ -1,14 +1,18 @@
-# Flicker
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-FLICKER - A library for making capacitive touch easy to use.
-Includes all the functions found in the Bounce library, smoothes eratic values to make variable input more useful and includes functions for measuring velocity.
- - by Josh Nishikawa (github.com/joshnishikawa/Flicker)
- - The "TouchSwitch" class was adapted from the Bounce library by:
-   Thomas O Fredericks, Eric Lowry, Jim Schimpf and Tom Harkaway
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-VERSION LOG
+# Flicker 1.1.4
+### A library for making capacitive touch easy to use.
+######  - by Josh Nishikawa <github.com/joshnishikawa/Flicker>
+###### The "TouchSwitch" class was adapted from the Bounce library by: Thomas O Fredericks, Eric Lowry, Jim Schimpf and Tom Harkaway
 
-1.0.4 (current)
+Includes all the functions found in the Bounce library, smoothes eratic values to make variable input more useful and includes functions for measuring velocity.
+___
+### VERSION LOG:
+
+1.1.4 
+- Added previousDuration() function that can be used on rising/falling edge to return the length of the input's previous state.
+- Added rose() and fell(). risingEdge() and fallingEdge() still work.
+- Now using bool data type where appropriate.
+
+1.0.4 
    - created a library.properties file
    - made the version number semver compliant (1.0.4 is the first official release)
    - moved source files into src/
@@ -27,7 +31,7 @@ VERSION LOG
   - Added the TouchVariable class for stable reading of ranges of input.
   - Added the TouchVelocity class for detecting velocity of changes in input.
   - Started keeping this version log.
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+___
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or

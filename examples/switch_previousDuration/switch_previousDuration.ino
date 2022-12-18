@@ -1,14 +1,13 @@
 #include <Flicker.h>
 
-// If you hold your finger on the input,
-// something will happen.
+// This will tell you how long the input stayed in its PREVIOUS state.
+// It may be useful to call this within rose() or fell().
 
-const uint8_t touchPin = 0; // CHOOSE A TOUCH PIN
+const uint8_t touchPin = 15; // CHOOSE A TOUCH PIN
 const uint8_t ledPin = 13;
 TouchSwitch myInput(touchPin);
 
 void setup() {
-  Serial.begin(9600);
   pinMode(ledPin, OUTPUT);
 
   // WARNING! if you setThreshold with no argument,
@@ -20,11 +19,9 @@ void setup() {
 void loop() {
   myInput.update();
 
-  if (myInput.rose()){
-    Serial.print("rose");
-  }
   if (myInput.fell()){
-    Serial.println("fell");
+    // After the input was released, print how long it was held.
+    Serial.println( myInput.previousDuration() );
   }
 
   digitalWrite(ledPin, myInput.read());

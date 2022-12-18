@@ -38,11 +38,13 @@ class TouchSwitch{
     // Returns the updated pin state.
     int read();
 
-    // risingEdge() is true for 1 scan after input goes above the threshold.
-    byte risingEdge();
+    // rose() is true for 1 scan after input goes above the threshold.
+    byte rose();
+    byte risingEdge(){return rose();}
 
-    // fallingEdge() is true for 1 scan after input goes below the threshold.
-    byte fallingEdge();
+    // fell() is true for 1 scan after input goes below the threshold.
+    byte fell();
+    byte fallingEdge(){return fell();}
 
     // Returns the number of milliseconds the pin has been in the current state.
     unsigned long duration();
@@ -55,6 +57,8 @@ class TouchSwitch{
    	// A 'debounce' interval isn't really needed but, if you want one...
     void interval(unsigned long interval_millis); 
 
+    unsigned long previousDuration();
+
   protected:
     int trigger();
     byte state = 0;
@@ -64,10 +68,11 @@ class TouchSwitch{
     unsigned long previous_millis = 0;
     unsigned long interval_millis = 0;
     unsigned long retrigger_millis = 0;
+    unsigned long durationOfPreviousState;
     byte pin = 0;
-    byte latched = false;
-    byte waiting = false;
-    byte stateChanged = false;
+    bool latched = false;
+    bool waiting = false;
+    bool stateChanged = false;
 };
 
 #endif
