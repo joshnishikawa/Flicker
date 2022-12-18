@@ -3,7 +3,7 @@
 // If you hold your finger on the input,
 // something will happen.
 
-const uint8_t touchPin = 0; // CHOOSE A TOUCH PIN
+const uint8_t touchPin = 15; // CHOOSE A TOUCH PIN
 const uint8_t ledPin = 13;
 TouchSwitch myInput(touchPin);
 
@@ -21,7 +21,7 @@ void loop() {
   myInput.update();
 
   if (myInput.rose()){
-    Serial.print("rose");
+    Serial.println("rose");
   }
   if (myInput.fell()){
     Serial.println("fell");

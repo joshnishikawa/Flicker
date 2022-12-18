@@ -48,13 +48,15 @@ class TouchVelocity{
     // *See notes below
     int responsiveRead();
 
-    // risingEdge() is true for 1 scan after input goes above touchOnThreshold
-    byte risingEdge();
+    // rose() is true for 1 scan after input goes above touchOnThreshold
+    byte rose();
+    byte risingEdge(){ return rose(); }
 
-    // fallingEdge() is true for 1 scan after input goes 
+    // fell() is true for 1 scan after input goes 
     //     below hoverOffThreshold when read() is used OR
     //     below touchOffThreshold when responsiveRead() is used
-    byte fallingEdge();
+    byte fell();
+    byte fallingEdge(){ return fell(); }
 
     int hoverOnThreshold, hoverOffThreshold, touchOnThreshold, touchOffThreshold;
 

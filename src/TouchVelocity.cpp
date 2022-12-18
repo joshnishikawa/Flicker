@@ -125,14 +125,13 @@ int TouchVelocity::responsiveRead(){
   }
   else{newValue = 0;}
   return newValue;
-};
+}
 
-
-byte TouchVelocity::risingEdge(){
+byte TouchVelocity::rose(){
   return stateChanged && state == 2;
   };
 
-byte TouchVelocity::fallingEdge(){
+byte TouchVelocity::fell(){
   return stateChanged && state == 0;
 };
 
