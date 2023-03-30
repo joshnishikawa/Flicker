@@ -4,7 +4,7 @@
 // value only when the signal is biased enough.
 // The larger the change, the more immediate the response.
 
-byte touchPin = 15; // CHOOSE A TOUCH PIN
+byte touchPin = 0; // CHOOSE A TOUCH PIN
 byte ledPin = 13;
 int preVal;
 TouchVariable myInput(touchPin);

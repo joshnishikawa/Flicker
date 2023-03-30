@@ -37,8 +37,6 @@ class TouchVariable{
     
     int inLo = 0;
     int inHi = 0;
-    int onThreshold = 0;
-    int offThreshold = 0;
     int outLo = 0;
     int outHi = 0;
     

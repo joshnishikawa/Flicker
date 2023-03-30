@@ -5,7 +5,7 @@
 // Also, a variable reading is taken from the same input,
 // mapped to a range of 0~1023 and printed to serial.
 
-const uint8_t touchPin = 15; // CHOOSE A TOUCH PIN
+const uint8_t touchPin = 0; // CHOOSE A TOUCH PIN
 const uint8_t ledPin = 13;
 bool ledState = false;
 int preVal = 0;

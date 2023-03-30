@@ -3,7 +3,7 @@
 // The input goes on when touched
 // and off when touched again.
 
-byte touchPin = 15; // CHOOSE A TOUCH PIN
+byte touchPin = 0; // CHOOSE A TOUCH PIN
 byte ledPin = 13;
 
 // MOMENTARY (the default) or LATCH can be specified

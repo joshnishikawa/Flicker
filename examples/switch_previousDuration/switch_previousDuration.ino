@@ -3,7 +3,7 @@
 // This will tell you how long the input stayed in its PREVIOUS state.
 // It may be useful to call this within rose() or fell().
 
-const uint8_t touchPin = 15; // CHOOSE A TOUCH PIN
+const uint8_t touchPin = 0; // CHOOSE A TOUCH PIN
 const uint8_t ledPin = 13;
 TouchSwitch myInput(touchPin);
 

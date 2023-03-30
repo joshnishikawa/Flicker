@@ -5,40 +5,62 @@ TouchSwitch::TouchSwitch(){};
 TouchSwitch::TouchSwitch(byte pin){
   this->pin = pin;
   latched = false;
+  setThreshold(); // only works if creating objects during setup
 };
 
 TouchSwitch::TouchSwitch(byte pin, byte mode){
   this->pin = pin;
   this->latched = mode;
+  setThreshold(); // only works if creating objects during setup
 };
 
-TouchSwitch::TouchSwitch(byte pin, byte mode, int onThreshold){
+TouchSwitch::TouchSwitch(byte pin, byte mode, int onT){
   this->pin = pin;
   latched = mode;
-  this->onThreshold = onThreshold;
-  offThreshold = onThreshold / 1.2 * 1.1;
+  onThreshold = onT;
+  setThreshold(onThreshold); // only works if creating objects during setup
 };
 
 TouchSwitch::~TouchSwitch(){};
 
 
 void TouchSwitch::setThreshold(){
-  int qval = 0;
   analogRead(A0); // The ADC can affect touch values so fire it up first.
-
-  for (int i = 0; i < 10; i++){ // store the highest quiescent reading of 10
-    int newValue = touchRead(pin);
-    if (newValue > qval) qval = newValue;
-  }
-
-  onThreshold =  qval * 1.2; // Threshold for rising edge
-  offThreshold = qval * 1.1; // Slightly lower for falling edge
+  inLo = touchRead(pin);
+  onThreshold = inLo * 1.1;  // initial threshold 10% above quiescent
+  updateThreshold(inLo, onThreshold); // updated on higher reading
 }
 
 
 void TouchSwitch::setThreshold(int threshold){
-  onThreshold = threshold; // Threshold for rising edge
-  offThreshold = threshold / 1.2 * 1.1; // Slightly lower for falling edge
+  userSetThreshold = true;
+  onThreshold = threshold;
+  analogRead(A0); // The ADC can affect touch values so fire it up first.
+  inLo = touchRead(pin);
+
+  // breaks if user-set threshold is lower than the quiescent reading
+  updateThreshold(inLo, onThreshold);
+}
+
+
+void TouchSwitch::updateThreshold(int low, int high){ // internal use only
+  inLo = low;
+  inHi = high;
+  int range = inHi - inLo;
+
+  if (!userSetThreshold){
+    // Assumes that halfway between lowest & highest readings is a good place
+    // for a threshold. Still a magic number but at least it's somewhat dynamic.
+    onThreshold = inLo + range * 0.5;
+    offThreshold = inLo + range * 0.3;
+  }
+  else{
+    // The user can forego assumptions and set the threshold themselves.
+    // We need to know where the threshold is in relation to the range of values
+    float sens = float(onThreshold - inLo) / float(range);
+    // Then we set the offThreshold to be 10% below the onThreshold
+    offThreshold = inLo + range * (sens - 0.1);
+  }
 }
 
 
@@ -62,9 +84,9 @@ int TouchSwitch::read(){
 }
 
 
-byte TouchSwitch::rose() {return stateChanged && state; }
+byte TouchSwitch::rose() { return stateChanged && state; }
 
-byte TouchSwitch::fell() {return stateChanged && !state; }
+byte TouchSwitch::fell() { return stateChanged && !state; }
 
 
 unsigned long TouchSwitch::duration(){
@@ -91,6 +113,9 @@ unsigned long TouchSwitch::previousDuration()
 int TouchSwitch::trigger(){
   int newValue = touchRead(pin);
   int current_millis = millis();
+
+  if (newValue > inHi){updateThreshold(inLo, newValue);}
+  else if (newValue < inLo){updateThreshold(newValue, inHi);}
 
   if(latched){ // LATCH behavior
     if (newValue >= onThreshold){
@@ -161,4 +186,3 @@ int TouchSwitch::trigger(){
       return 0;}
   }
 }
-

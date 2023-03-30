@@ -20,7 +20,7 @@ class TouchSwitch{
     TouchSwitch(byte pin, byte mode);
 
     // Initialize a momentary or latched switch with a specific threshold.
-    TouchSwitch(byte pin, byte mode, int onThreshold);
+    TouchSwitch(byte pin, byte mode, int onT);
 
     // Destructor
     ~TouchSwitch();
@@ -60,19 +60,20 @@ class TouchSwitch{
     unsigned long previousDuration();
 
   protected:
+    byte pin = 0;
+    bool latched = false;
+    bool waiting = false;
+    bool stateChanged = false;
+    int inHi, onThreshold, offThreshold, inLo;
     int trigger();
-    byte state = 0;
-    int onThreshold = 0;
-    int offThreshold = 0;
+    void updateThreshold(int low, int high);
+    bool state = false;
+    bool userSetThreshold = false;
     elapsedMillis held_millis = 0;
     unsigned long previous_millis = 0;
     unsigned long interval_millis = 0;
     unsigned long retrigger_millis = 0;
     unsigned long durationOfPreviousState;
-    byte pin = 0;
-    bool latched = false;
-    bool waiting = false;
-    bool stateChanged = false;
 };
 
 #endif

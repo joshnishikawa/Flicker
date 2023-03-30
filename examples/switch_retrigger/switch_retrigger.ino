@@ -3,7 +3,7 @@
 // As long as the input is held, 
 // it will be triggered repeatedly.
 
-const uint8_t touchPin = 15; // CHOOSE A TOUCH PIN
+const uint8_t touchPin = 0; // CHOOSE A TOUCH PIN
 const uint8_t ledPin = 13;
 bool ledState = false;
 TouchSwitch myInput(touchPin); 

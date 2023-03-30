@@ -1,10 +1,20 @@
-# Flicker 1.1.4
+# Flicker 2.0.0
 ### A library for making capacitive touch easy to use.
 ###### by Josh Nishikawa <github.com/joshnishikawa/Flicker>
 ###### The "TouchSwitch" class was adapted from the Bounce library by: Thomas O Fredericks, Eric Lowry, Jim Schimpf and Tom Harkaway
 Includes all the functions found in the Bounce library, smoothes eratic values to make variable input more useful and includes functions for measuring velocity.
 ___
 ### VERSION LOG:
+2.0.0
+- Thresholds for TouchSwitch are now set more dynamically and updated when
+  highest/lowest readings are updated. This better accommodates more setups 
+  regardless of quiescent readings or ranges between highest/lowest readings.
+
+- setThresholds() MUST be called during setup and requires two arguments: the lowest possible reading that detects your finger and the reading at which a the value should be returned (contact). Use rangeFinder.ino to find these values.
+- responsiveRead() is deprecated. Use read() instead.
+- Setting outLo and outHi in the constructor is deprecated. Just map the return
+  value of read() in the sketch.
+
 
 1.1.4 
 - Added previousDuration() function that can be used on rising/falling edge to return the length of the input's previous state.

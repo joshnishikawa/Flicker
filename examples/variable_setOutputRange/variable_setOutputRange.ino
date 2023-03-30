@@ -3,7 +3,7 @@
 // Map the variable touuch input to a specific range.
 // Examples: 0~1023 to emulate analog; or 0~127 for MIDI.
 
-byte touchPin = 15; // CHOOSE A TOUCH PIN
+byte touchPin = 0; // CHOOSE A TOUCH PIN
 int preVal;
 TouchVariable myInput(touchPin);
 
@@ -14,7 +14,7 @@ void setup() {
   // the input range is calculated based on a call to
   // touchRead() so DON'T touch the input during setup()
   myInput.setInputRange();
-  myInput.setOutputRange(0, 1023); // 7-bit MIDI
+  myInput.setOutputRange(0, 1023); // 10-bit analog
 }
 
 void loop(){
