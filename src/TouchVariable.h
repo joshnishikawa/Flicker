@@ -46,7 +46,7 @@ class TouchVariable{
     bool mapped = false; // true maps input to a predetermined output range
     bool adjustInHi = true;//false if using setInputRange(int inLo, int inHi)
     
-    int buffer = 0;   /* Think of this variable as a container like a capacitor
+    long buffer = 0;  /* Think of this variable as a container like a capacitor
                         acting as a low-pass filter. */
 
     int threshold = 0;// This would be the variable capacity of the capacitor.

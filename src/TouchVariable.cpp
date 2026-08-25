@@ -4,15 +4,15 @@ TouchVariable::TouchVariable(){};
 
 TouchVariable::TouchVariable(byte pin){
   this->pin = pin;
-  setInputRange(); // only works if creating objects during setup
+  this->mapped = false;
 };
 
 TouchVariable::TouchVariable(byte pin, int outLo, int outHi){
   this->pin = pin;
   this->outLo = outLo;
   this->outHi = outHi;
-  mapped = true;
-  setInputRange(); // only works if creating objects during setup
+  this->mapped = true;
+  this->balancedValue = outLo;
 };
 
 TouchVariable::~TouchVariable(){};
@@ -21,43 +21,89 @@ TouchVariable::~TouchVariable(){};
 void TouchVariable::setInputRange(){
   adjustInHi = true; // Auto adjust inHi if there is a higher reading.
   flickerTouchInit(); // Fire up ADC if needed on platforms where ADC affects touch
-  int qval = flickerTouchRead(pin);
-  inLo = qval * 1.01; // prevent noise on the bottom end
-  inHi = qval * 1.1; // Higher values are still possible
+  
+  // Warm up the touch sensor hardware and allow filters/clocks to settle
+  flickerTouchRead(pin);
+  delay(50);
+
+  // Average multiple readings to establish a stable baseline
+  long total = 0;
+  for (uint8_t i = 0; i < 16; i++) {
+    total += flickerTouchRead(pin);
+    delay(2);
+  }
+  int qval = (int)(total / 16);
+  
+  inLo = qval;
+  inHi = inLo + max(100, (int)(qval * 0.10));
+  balancedValue = mapped ? outLo : inLo;
+  buffer = 0;
 };
 
 void TouchVariable::setInputRange(int inLo, int inHi){
   adjustInHi = false; // Don't increase inHi when getting a higher reading
   this->inHi = inHi; // Values can still go higher unless using setOutputRange()
   this->inLo = inLo; // Values can still go lower unless using setOutputRange()
+  balancedValue = mapped ? outLo : inLo;
+  buffer = 0;
 };
 
 
 int TouchVariable::read(){
-  int newValue = flickerTouchRead(pin);
-
-  // Determine what percent of touch reading values the threshold should be.
-  threshold = newValue * (NR/100);
-
-  if (adjustInHi){
-    // A conservative inHi of 1.7x is set when setInputRange() is called but,
-    // the highest reading could be much higher than that. This line adjusts
-    // inHi if newValue is 1.1x higher. If newValue is higher but less than
-    // 1.1* higher, inHi is left alone allowing you to 'max out' the input.
-    // Use setInputRange(int inLo, int inHi) to prevent this auto-adjustment.
-    inHi = newValue > inHi * 1.1 ? newValue : inHi;
+  // Auto-calibrate if setInputRange was not explicitly called in setup
+  if (inLo == 0 && inHi == 0){
+    setInputRange();
   }
+
+  int rawValue = flickerTouchRead(pin);
+
+  if (adjustInHi && rawValue > inHi){
+    inHi = rawValue;
+  }
+
+  // Ensure valid range to avoid divide-by-zero
+  if (inHi <= inLo){
+    inHi = inLo + 1;
+  }
+
+  int targetValue;
   if (mapped){
-    newValue = map(newValue, inLo, inHi, outLo, outHi);
-    newValue = constrain(newValue, outLo, outHi);
+    int loBound = min(outLo, outHi);
+    int hiBound = max(outLo, outHi);
+    targetValue = map(rawValue, inLo, inHi, outLo, outHi);
+    targetValue = constrain(targetValue, loBound, hiBound);
+  } else {
+    targetValue = rawValue;
   }
-  int difference = newValue - balancedValue;
-  buffer = newValue == balancedValue ? buffer/2 : buffer + difference;
-  if (abs(buffer) > abs(threshold)){
-    balancedValue = newValue;
 
-    buffer = 0;
+  // If noise reduction is disabled (0), return immediate value
+  if (NR <= 0.0f){
+    balancedValue = targetValue;
+    return balancedValue;
   }
+
+  int difference = targetValue - balancedValue;
+  if (difference == 0){
+    return balancedValue;
+  }
+
+  int span = mapped ? abs(outHi - outLo) : (inHi - inLo);
+  // Deadband threshold: small fluctuations within deadband (0.5% to 1.5% of span) are ignored
+  threshold = max(2, (int)(span * (NR / 7500.0f)));
+
+  // If change is within noise deadband, keep current balancedValue solid
+  if (abs(difference) <= threshold){
+    return balancedValue;
+  }
+
+  // Smoothly track towards targetValue
+  float alpha = 1.0f - (constrain(NR, 0.0f, 100.0f) / 100.0f) * 0.70f;
+  int step = (int)(difference * alpha);
+  if (step == 0){
+    step = (difference > 0) ? 1 : -1;
+  }
+  balancedValue += step;
+
   return balancedValue;
 };
 
@@ -65,9 +111,12 @@ int TouchVariable::read(){
 void TouchVariable::setOutputRange(int outLo, int outHi){
   this->outLo = outLo;
   this->outHi = outHi;
-  mapped = true;
+  this->mapped = true;
+  this->balancedValue = outLo;
+  this->buffer = 0;
 };
 
 void TouchVariable::setNR(int amount){
-  this->NR = float(amount);
+  this->NR = (float)constrain(amount, 0, 100);
 };
+
