@@ -2,6 +2,7 @@
 #define Flicker_h
 
 #include "Arduino.h"
+#include "FlickerTouch.h"
 #include "TouchSwitch.h"
 #include "TouchVariable.h"
 #include "TouchVelocity.h"
@@ -18,4 +19,3 @@ class Flicker: public TouchSwitch{
 };
 
 #endif
-

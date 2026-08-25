@@ -20,8 +20,8 @@ TouchVariable::~TouchVariable(){};
 
 void TouchVariable::setInputRange(){
   adjustInHi = true; // Auto adjust inHi if there is a higher reading.
-  analogRead(A0); // The ADC can affect touch values so fire it up first.
-  int qval = touchRead(pin);
+  flickerTouchInit(); // Fire up ADC if needed on platforms where ADC affects touch
+  int qval = flickerTouchRead(pin);
   inLo = qval * 1.01; // prevent noise on the bottom end
   inHi = qval * 1.1; // Higher values are still possible
 };
@@ -34,9 +34,9 @@ void TouchVariable::setInputRange(int inLo, int inHi){
 
 
 int TouchVariable::read(){
-  int newValue = touchRead(pin);
+  int newValue = flickerTouchRead(pin);
 
-  // Determine what percent of touchRead() values the threshold should be.
+  // Determine what percent of touch reading values the threshold should be.
   threshold = newValue * (NR/100);
 
   if (adjustInHi){
@@ -53,7 +53,7 @@ int TouchVariable::read(){
   }
   int difference = newValue - balancedValue;
   buffer = newValue == balancedValue ? buffer/2 : buffer + difference;
-  if (buffer*buffer > threshold*threshold){ // "abs(buffer) > NR" doesn't work
+  if (abs(buffer) > abs(threshold)){
     balancedValue = newValue;
 
     buffer = 0;

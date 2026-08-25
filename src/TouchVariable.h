@@ -1,4 +1,5 @@
 #include "Arduino.h"
+#include "FlickerTouch.h"
 
 #ifndef TouchVariable_h
 #define TouchVariable_h

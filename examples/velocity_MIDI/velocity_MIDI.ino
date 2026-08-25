@@ -6,7 +6,7 @@
 int slowest = 2200;
 int fastest = 550;
 
-byte touchPin = 0; // CHOOSE A TOUCH PIN
+byte touchPin = 0; // TOUCH PIN e.g. 0 on Teensy, D0 on XIAO
 int noteNumber = 38; // CHOOSE A NOTE TO PLAY
 
 TouchVelocity myInput(touchPin);

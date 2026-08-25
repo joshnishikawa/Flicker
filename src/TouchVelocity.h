@@ -1,4 +1,6 @@
 #include "Arduino.h"
+#include "elapsedMillis.h"
+#include "FlickerTouch.h"
 
 #ifndef TouchVelocity_h
 #define TouchVelocity_h

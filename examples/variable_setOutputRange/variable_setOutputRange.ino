@@ -3,7 +3,7 @@
 // Map the variable touuch input to a specific range.
 // Examples: 0~1023 to emulate analog; or 0~127 for MIDI.
 
-byte touchPin = 0; // CHOOSE A TOUCH PIN
+byte touchPin = 0; // TOUCH PIN e.g. 0 on Teensy, D0 on XIAO
 int preVal;
 TouchVariable myInput(touchPin);
 

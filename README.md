@@ -1,10 +1,29 @@
-# Flicker 2.0.0
-### A library for making capacitive touch easy to use.
+# Flicker 2.1.0
+### A library for making capacitive touch easy to use across multiple microcontroller boards.
 ###### by Josh Nishikawa <github.com/joshnishikawa/Flicker>
 ###### The "TouchSwitch" class was adapted from the Bounce library by: Thomas O Fredericks, Eric Lowry, Jim Schimpf and Tom Harkaway
-Includes all the functions found in the Bounce library, smoothes eratic values to make variable input more useful and includes functions for measuring velocity.
-___
+Includes all the functions found in the Bounce library, smooths erratic values to make variable input more useful, and includes functions for measuring velocity.
+
+---
+
+### SUPPORTED BOARDS & ARCHITECTURES:
+- **Teensy (3.0, 3.1, 3.2, 3.5, 3.6, LC)**: Uses native hardware Touch Sense Input (TSI) pins.
+- **ESP32 Classic (WROOM, WROVER)**: Uses built-in touch pins (T0–T9 on GPIOs 4, 0, 2, 15, 13, 12, 14, 27, 33, 32) with automatic signal normalization.
+- **ESP32-S2 & ESP32-S3**: Uses built-in hardware capacitive touch pins (GPIOs 1–14).
+- **AVR (Arduino Uno, Nano, Mega, Leonardo, Pro Mini)**: Single-pin capacitive sensing on any analog pin (A0–A7) using internal ADC sample & hold capacitor charge redistribution (no extra resistors or capacitors needed).
+- **SAMD21 / SAMD51**: Supported on touch-enabled pins / core environments.
+
+---
+
 ### VERSION LOG:
+2.1.0
+- Added multi-board hardware abstraction layer (`FlickerTouch.h`).
+- Added support for ESP32 and ESP32-S2/S3 with signal inversion/normalization for classic ESP32.
+- Added single-pin ADC capacitive touch sensing for classic AVR boards (Uno, Nano, Mega, Leonardo).
+- Updated `library.properties` architectures to `*`.
+- Prevented potential 32-bit integer overflow in `TouchVariable` filter for high-resolution touch counters.
+- Self-contained `rangeFinder.ino` without requiring external dependencies.
+
 2.0.0
 - Thresholds for TouchSwitch are now set more dynamically and updated when
   highest/lowest readings are updated. This better accommodates more setups 

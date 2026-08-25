@@ -25,8 +25,8 @@ TouchSwitch::~TouchSwitch(){};
 
 
 void TouchSwitch::setThreshold(){
-  analogRead(A0); // The ADC can affect touch values so fire it up first.
-  inLo = touchRead(pin);
+  flickerTouchInit(); // Fire up ADC if needed on platforms where ADC affects touch
+  inLo = flickerTouchRead(pin);
   onThreshold = inLo * 1.1;  // initial threshold 10% above quiescent
   updateThreshold(inLo, onThreshold); // updated on higher reading
 }
@@ -35,8 +35,8 @@ void TouchSwitch::setThreshold(){
 void TouchSwitch::setThreshold(int threshold){
   userSetThreshold = true;
   onThreshold = threshold;
-  analogRead(A0); // The ADC can affect touch values so fire it up first.
-  inLo = touchRead(pin);
+  flickerTouchInit(); // Fire up ADC if needed on platforms where ADC affects touch
+  inLo = flickerTouchRead(pin);
 
   // breaks if user-set threshold is lower than the quiescent reading
   updateThreshold(inLo, onThreshold);
@@ -111,7 +111,7 @@ unsigned long TouchSwitch::previousDuration()
 
 // Protected: triggers the pin
 int TouchSwitch::trigger(){
-  int newValue = touchRead(pin);
+  int newValue = flickerTouchRead(pin);
   int current_millis = millis();
 
   if (newValue > inHi){updateThreshold(inLo, newValue);}

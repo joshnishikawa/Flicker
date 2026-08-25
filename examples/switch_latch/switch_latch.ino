@@ -3,14 +3,13 @@
 // The input goes on when touched
 // and off when touched again.
 
-byte touchPin = 0; // CHOOSE A TOUCH PIN
-byte ledPin = 13;
+byte touchPin = 0; // TOUCH PIN e.g. 0 on Teensy, D0 on XIAO
 
 // MOMENTARY (the default) or LATCH can be specified
 TouchSwitch myInput(touchPin, LATCH);
 
 void setup() {
-  pinMode(ledPin, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // WARNING! if you setThreshold with no argument,
   // the threshold is calculated based on a call to
@@ -20,5 +19,5 @@ void setup() {
 
 void loop(){
   myInput.update();
-  digitalWrite(ledPin, myInput.read());
+  digitalWrite(LED_BUILTIN, myInput.read());
 }

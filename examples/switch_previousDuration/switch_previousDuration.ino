@@ -3,12 +3,11 @@
 // This will tell you how long the input stayed in its PREVIOUS state.
 // It may be useful to call this within rose() or fell().
 
-const uint8_t touchPin = 0; // CHOOSE A TOUCH PIN
-const uint8_t ledPin = 13;
+const uint8_t touchPin = 0; // TOUCH PIN e.g. 0 on Teensy, D0 on XIAO
 TouchSwitch myInput(touchPin);
 
 void setup() {
-  pinMode(ledPin, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // WARNING! if you setThreshold with no argument,
   // the threshold is calculated based on a call to
@@ -24,5 +23,5 @@ void loop() {
     Serial.println( myInput.previousDuration() );
   }
 
-  digitalWrite(ledPin, myInput.read());
+  digitalWrite(LED_BUILTIN, myInput.read());
 }

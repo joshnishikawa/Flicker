@@ -18,7 +18,7 @@ void TouchVelocity::setThresholds(int hoverThreshold, int touchThreshold){
 
 
 int TouchVelocity::read(){
-  int newValue = touchRead(pin);
+  int newValue = flickerTouchRead(pin);
 
   if (state == 0){ // idle
     stateChanged = false;

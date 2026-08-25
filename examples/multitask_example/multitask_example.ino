@@ -5,8 +5,7 @@
 // Also, a variable reading is taken from the same input,
 // mapped to a range of 0~1023 and printed to serial.
 
-const uint8_t touchPin = 0; // CHOOSE A TOUCH PIN
-const uint8_t ledPin = 13;
+const uint8_t touchPin = 0; // TOUCH PIN e.g. 0 on Teensy, D0 on XIAO
 bool ledState = false;
 int preVal = 0;
 TouchSwitch mySwitch(touchPin, LATCH); 
@@ -14,7 +13,7 @@ TouchVariable myVariable(touchPin, 0, 1023);
 
 void setup(){
   Serial.begin(9600);
-  pinMode(ledPin,OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // WARNING! if you setThreshold or setInputRange
   // with no arguments, the threshold or input range
@@ -34,7 +33,7 @@ void loop(){
     }
     else {ledState = LOW;
     }
-  digitalWrite(ledPin, ledState);
+  digitalWrite(LED_BUILTIN, ledState);
   }
 
   int newVal = myVariable.read();

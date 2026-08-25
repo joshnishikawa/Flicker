@@ -6,12 +6,11 @@
    The LED lights when your finger goes below the
    'hover' threshold to act as a 'ready' light.*/
 
-byte touchPin = 0; // CHOOSE A TOUCH PIN
-byte LED = 13;
+byte touchPin = 0; // TOUCH PIN e.g. 0 on Teensy, D0 on XIAO
 TouchVelocity myInput(touchPin);
  
 void setup() {
-  pinMode(LED, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
   
   // WARNING! You must pass two arguments to setThresholds()
   // Use the rangeFinder example to get a reading with your finger 1mm above the
@@ -25,7 +24,7 @@ void setup() {
 void loop(){
   int velocity = myInput.read();
   if (myInput.fell()){
-    digitalWrite(LED, HIGH);
+    digitalWrite(LED_BUILTIN, HIGH);
   }
   if (myInput.rose()){
     digitalWrite(LED, LOW);
