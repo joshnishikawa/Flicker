@@ -20,9 +20,11 @@ Includes all the functions found in the Bounce library, smooths erratic values t
 - Added multi-board hardware abstraction layer (`FlickerTouch.h`).
 - Added support for ESP32 and ESP32-S2/S3 with signal inversion/normalization for classic ESP32.
 - Added single-pin ADC capacitive touch sensing for classic AVR boards (Uno, Nano, Mega, Leonardo).
+- Added zero-argument auto-calibration `setThresholds()` to `TouchVelocity`.
+- Added deadband noise decay to `TouchVariable` for high-resolution touch counters (ESP32-S3).
+- Updated `rangeFinder.ino` with live Serial streaming, plotter compatibility, and Serial baseline reset.
+- Updated all library examples with board-adaptive touch pin definitions and MIDI compatibility.
 - Updated `library.properties` architectures to `*`.
-- Prevented potential 32-bit integer overflow in `TouchVariable` filter for high-resolution touch counters.
-- Self-contained `rangeFinder.ino` without requiring external dependencies.
 
 2.0.0
 - Thresholds for TouchSwitch are now set more dynamically and updated when
