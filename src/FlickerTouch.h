@@ -10,19 +10,17 @@
 
 #if defined(ARDUINO_ARCH_ESP32)
 
-  #if defined(CONFIG_IDF_TARGET_ESP32)
-    // Classic ESP32: touchRead() returns decreasing values on touch (~80 idle, ~20 touched).
-    // Invert reading so higher value indicates higher capacitance/touch.
-    inline int flickerTouchRead(uint8_t pin) {
-      int val = touchRead(pin);
-      return (val > 0) ? (1024 - val) : 0;
-    }
-  #else
-    // ESP32-S2, ESP32-S3: touchRead() returns raw pulse count which increases on touch.
-    inline int flickerTouchRead(uint8_t pin) {
-      return (int)touchRead(pin);
-    }
-  #endif
+  inline int flickerTouchRead(uint8_t pin) {
+    int val = (int)touchRead(pin);
+    #if (defined(CONFIG_IDF_TARGET_ESP32) && CONFIG_IDF_TARGET_ESP32) && !defined(CONFIG_IDF_TARGET_ESP32S2) && !defined(CONFIG_IDF_TARGET_ESP32S3)
+      // Classic ESP32 only: touchRead() returns decreasing values on touch (~80 idle, ~20 touched).
+      // Invert reading so higher value indicates higher capacitance/touch.
+      if (val > 0 && val <= 1024) {
+        val = 1024 - val;
+      }
+    #endif
+    return val;
+  }
 
   inline void flickerTouchInit() {
     // No ADC priming needed for ESP32

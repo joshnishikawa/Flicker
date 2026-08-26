@@ -9,7 +9,29 @@ TouchVelocity::TouchVelocity(byte pin){
 TouchVelocity::~TouchVelocity(){};
 
 
+void TouchVelocity::setThresholds(){
+  flickerTouchInit();
+  
+  // Discard initial dummy reading (hardware warmup)
+  flickerTouchRead(pin);
+  delay(50);
+
+  // Average 16 readings to establish quiescent baseline
+  long total = 0;
+  for (uint8_t i = 0; i < 16; i++) {
+    total += flickerTouchRead(pin);
+    delay(2);
+  }
+  int baseline = (int)(total / 16);
+
+  int hoverT = baseline + max(10, (int)(baseline * 0.02)); // ~2% above baseline (early hover detection)
+  int touchT = baseline + max(50, (int)(baseline * 0.15)); // ~15% above baseline (contact)
+  setThresholds(hoverT, touchT);
+}
+
+
 void TouchVelocity::setThresholds(int hoverThreshold, int touchThreshold){
+  flickerTouchInit();
   hoverOnThreshold = hoverThreshold;
   touchOnThreshold = touchThreshold;
   touchOffThreshold = touchOnThreshold * 0.9;
@@ -18,6 +40,11 @@ void TouchVelocity::setThresholds(int hoverThreshold, int touchThreshold){
 
 
 int TouchVelocity::read(){
+  // Auto-calibrate if thresholds were never set
+  if (hoverOnThreshold == 0 && touchOnThreshold == 0){
+    setThresholds();
+  }
+
   int newValue = flickerTouchRead(pin);
 
   if (state == 0){ // idle
@@ -32,7 +59,7 @@ int TouchVelocity::read(){
     if (newValue >= touchOnThreshold){ // return velocity
       stateChanged = true;
       state = 2; // wait for release
-      return timer;
+      return (int)timer;
     }
     else if (newValue <= hoverOffThreshold){ // return to idle
       state = 0;
@@ -48,7 +75,6 @@ int TouchVelocity::read(){
       stateChanged = true;
       state = 0; // idle
     }
-    else{stateChanged = false;}
     return 0;
   }
   else return 0;

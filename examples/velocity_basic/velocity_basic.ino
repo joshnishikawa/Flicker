@@ -6,19 +6,39 @@
    The LED lights when your finger goes below the
    'hover' threshold to act as a 'ready' light.*/
 
-byte touchPin = 0; // TOUCH PIN e.g. 0 on Teensy, D0 on XIAO
+#if defined(ARDUINO_ARCH_ESP32)
+  #if defined(D0)
+    const uint8_t touchPin = D0; // XIAO ESP32-S3 (D0 is GPIO 1 / TOUCH1)
+  #elif defined(CONFIG_IDF_TARGET_ESP32S3) || defined(CONFIG_IDF_TARGET_ESP32S2)
+    const uint8_t touchPin = 1;  // ESP32-S2 / ESP32-S3 touch pin (GPIO 1-14)
+  #else
+    const uint8_t touchPin = 4;  // Classic ESP32 touch pin T0 (GPIO 4)
+  #endif
+#elif defined(D0)
+  const uint8_t touchPin = D0;   // XIAO SAMD21 / RP2040
+#elif defined(__AVR__)
+  const uint8_t touchPin = A0;   // AVR (Uno, Nano, Mega, Leonardo) analog pin
+#else
+  const uint8_t touchPin = 0;    // Teensy 3.x/LC (Pin 0 is TSI touch)
+#endif
+
 TouchVelocity myInput(touchPin);
  
 void setup() {
+  Serial.begin(115200);
+  while (!Serial && millis() < 2500); // Wait for Serial on USB CDC boards
   pinMode(LED_BUILTIN, OUTPUT);
   
-  // WARNING! You must pass two arguments to setThresholds()
-  // Use the rangeFinder example to get a reading with your finger 1mm above the
-  // input and another reading with your finger lightly touching the input.
-  // You will not likely be able to use these values (900, 1250) as is.
-  myInput.setThresholds(900, 1250);
+  // Calling setThresholds() with no arguments automatically calculates
+  // the hover and touch thresholds based on your quiescent touch reading
+  // (DON'T touch the sensor during setup):
+  myInput.setThresholds();
 
-  digitalWrite(LED, HIGH); 
+  // Or use the rangeFinder example to find specific numbers for your setup
+  // and pass them as arguments:
+  // myInput.setThresholds(hoverThreshold, touchThreshold);
+
+  digitalWrite(LED_BUILTIN, HIGH); 
 }
 
 void loop(){
@@ -27,7 +47,7 @@ void loop(){
     digitalWrite(LED_BUILTIN, HIGH);
   }
   if (myInput.rose()){
-    digitalWrite(LED, LOW);
+    digitalWrite(LED_BUILTIN, LOW);
   }
   if (velocity >= 1){
     Serial.println(velocity);

@@ -17,6 +17,9 @@ class TouchVelocity{
     // Destructor
     ~TouchVelocity();
 
+    // Automatically calculates hover and touch thresholds based on quiescent baseline.
+    void setThresholds();
+
     // Use this any time for specific thresholds (touchRead() is not called)
     void setThresholds(int hoverThreshold, int touchThreshold);
     
