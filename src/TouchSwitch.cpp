@@ -37,8 +37,12 @@ void TouchSwitch::setThreshold(){
     delay(2);
   }
   inLo = (int)(total / 16);
-  onThreshold = inLo + max(10, (int)(inLo * 0.10));  // initial threshold 10% above quiescent
-  updateThreshold(inLo, onThreshold); // updated on higher reading
+  userSetThreshold = false;
+
+  int minDelta = max(20, (int)(inLo * 0.15));
+  inHi = inLo + minDelta;
+  onThreshold = inLo + minDelta;
+  offThreshold = inLo + (int)(minDelta * 0.70);
 }
 
 
@@ -56,9 +60,10 @@ void TouchSwitch::setThreshold(int threshold){
     delay(2);
   }
   inLo = (int)(total / 16);
+  inHi = max(inLo, onThreshold);
 
-  // breaks if user-set threshold is lower than the quiescent reading
-  updateThreshold(inLo, onThreshold);
+  int delta = max(10, onThreshold - inLo);
+  offThreshold = inLo + (int)(delta * 0.75);
 }
 
 
@@ -68,17 +73,14 @@ void TouchSwitch::updateThreshold(int low, int high){ // internal use only
   int range = inHi - inLo;
 
   if (!userSetThreshold){
-    // Assumes that halfway between lowest & highest readings is a good place
-    // for a threshold. Still a magic number but at least it's somewhat dynamic.
-    onThreshold = inLo + range * 0.5;
-    offThreshold = inLo + range * 0.3;
+    int minDelta = max(20, (int)(inLo * 0.15));
+    int dynamicDelta = max(minDelta, (int)(range * 0.35));
+    onThreshold = inLo + dynamicDelta;
+    offThreshold = inLo + (int)(dynamicDelta * 0.70);
   }
   else{
-    // The user can forego assumptions and set the threshold themselves.
-    // We need to know where the threshold is in relation to the range of values
-    float sens = float(onThreshold - inLo) / float(range);
-    // Then we set the offThreshold to be 10% below the onThreshold
-    offThreshold = inLo + range * (sens - 0.1);
+    int delta = max(10, onThreshold - inLo);
+    offThreshold = inLo + (int)(delta * 0.75);
   }
 }
 
@@ -134,7 +136,7 @@ int TouchSwitch::trigger(){
   int current_millis = millis();
 
   if (newValue > inHi){updateThreshold(inLo, newValue);}
-  else if (newValue < inLo){updateThreshold(newValue, inHi);}
+  else if (newValue < inLo && (inLo - newValue) > 5){updateThreshold(newValue, inHi);}
 
   if(latched){ // LATCH behavior
     if (newValue >= onThreshold){

@@ -24,8 +24,10 @@ void TouchVelocity::setThresholds(){
   }
   int baseline = (int)(total / 16);
 
-  int hoverT = baseline + max(10, (int)(baseline * 0.02)); // ~2% above baseline (early hover detection)
-  int touchT = baseline + max(50, (int)(baseline * 0.15)); // ~15% above baseline (contact)
+  int hoverDelta = max(20, (int)(baseline * 0.04)); // ~4% above baseline, min 20
+  int touchDelta = max(60, (int)(baseline * 0.18)); // ~18% above baseline, min 60
+  int hoverT = baseline + hoverDelta;
+  int touchT = baseline + touchDelta;
   setThresholds(hoverT, touchT);
 }
 
@@ -34,8 +36,9 @@ void TouchVelocity::setThresholds(int hoverThreshold, int touchThreshold){
   flickerTouchInit();
   hoverOnThreshold = hoverThreshold;
   touchOnThreshold = touchThreshold;
-  touchOffThreshold = touchOnThreshold * 0.9;
-  hoverOffThreshold = hoverOnThreshold * 0.99;
+  int span = max(10, touchOnThreshold - hoverOnThreshold);
+  touchOffThreshold = touchOnThreshold - max(5, (int)(span * 0.25));
+  hoverOffThreshold = hoverOnThreshold - max(5, (int)(span * 0.20));
 }
 
 

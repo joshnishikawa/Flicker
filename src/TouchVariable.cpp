@@ -1,10 +1,14 @@
 #include "TouchVariable.h"
 
-TouchVariable::TouchVariable(){};
+TouchVariable::TouchVariable(){
+  this->mapped = false;
+  this->buffer = 0;
+};
 
 TouchVariable::TouchVariable(byte pin){
   this->pin = pin;
   this->mapped = false;
+  this->buffer = 0;
 };
 
 TouchVariable::TouchVariable(byte pin, int outLo, int outHi){
@@ -12,6 +16,7 @@ TouchVariable::TouchVariable(byte pin, int outLo, int outHi){
   this->outLo = outLo;
   this->outHi = outHi;
   this->mapped = true;
+  this->buffer = 0;
 };
 
 TouchVariable::~TouchVariable(){};
@@ -33,48 +38,54 @@ void TouchVariable::setInputRange(){
   }
   int qval = (int)(total / 16);
 
-  inLo = qval * 1.01; // prevent noise on the bottom end
-  inHi = qval * 1.1; // Higher values are still possible
+  inLo = (int)(qval * 1.01); // prevent noise on the bottom end
+  inHi = max(inLo + 10, (int)(qval * 1.10)); // Higher values are still possible
   balancedValue = inLo;
-  buffer = 0;
+  buffer = (long)inLo << 8;
 };
 
 void TouchVariable::setInputRange(int inLo, int inHi){
   adjustInHi = false; // Don't increase inHi when getting a higher reading
-  this->inHi = inHi; // Values can still go higher unless using setOutputRange()
-  this->inLo = inLo; // Values can still go lower unless using setOutputRange()
+  this->inLo = inLo;
+  this->inHi = (inHi > inLo) ? inHi : (inLo + 1); // Guard against division by zero in map()
   balancedValue = inLo;
-  buffer = 0;
+  buffer = (long)inLo << 8;
 };
 
 
 int TouchVariable::read(){
   int rawValue = flickerTouchRead(pin);
 
-  // Determine what percent of touch reading values the threshold should be.
-  threshold = (int)(rawValue * (NR / 100.0f));
-
-  if (adjustInHi){
-    // A conservative inHi is set when setInputRange() is called but,
-    // the highest reading could be much higher than that. This line adjusts
-    // inHi if rawValue is 1.1x higher. If rawValue is higher but less than
-    // 1.1* higher, inHi is left alone allowing you to 'max out' the input.
-    // Use setInputRange(int inLo, int inHi) to prevent this auto-adjustment.
-    inHi = rawValue > inHi * 1.1 ? rawValue : inHi;
-  }
-
-  int difference = rawValue - balancedValue;
-  int deadband = max(2, (int)(threshold * 0.05f));
-
-  if (abs(difference) <= deadband){
-    buffer = buffer / 2;
-  } else {
-    buffer = buffer + difference;
-  }
-
-  if (abs(buffer) > abs(threshold)){
+  if (balancedValue == 0 && buffer == 0){
     balancedValue = rawValue;
-    buffer = 0;
+    buffer = (long)rawValue << 8;
+  }
+
+  if (NR <= 0.0f){
+    balancedValue = rawValue;
+    buffer = (long)rawValue << 8;
+  } else {
+    // Dynamic noise deadband scaled with NR to eliminate stationary jitter
+    int deadband = max(1, (int)(rawValue * (NR / 10000.0f)));
+    int diff = rawValue - balancedValue;
+
+    if (abs(diff) > deadband){
+      long target = (long)rawValue << 8;
+      long delta = target - buffer;
+
+      // Smooth fractional progression divisor
+      int k = max(2, (int)(NR * 0.32f));
+      if (abs(diff) > deadband * 6){
+        k = max(2, k / 4); // Accelerate tracking for intentional large gestures
+      }
+
+      buffer += delta / k;
+      balancedValue = (int)((buffer + 128) >> 8);
+    }
+  }
+
+  if (adjustInHi && balancedValue > inHi){
+    inHi = balancedValue;
   }
 
   if (mapped){
@@ -97,4 +108,5 @@ void TouchVariable::setOutputRange(int outLo, int outHi){
 void TouchVariable::setNR(int amount){
   this->NR = float(amount);
 };
+
 

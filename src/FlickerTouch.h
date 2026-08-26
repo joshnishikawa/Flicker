@@ -29,8 +29,14 @@
 #elif defined(CORE_TEENSY) || defined(TEENSYDUINO)
 
   // Teensy 3.0/3.1/3.2/3.5/3.6/LC: Native hardware TSI touchRead()
+  // Uses a 3-sample median filter to eliminate impulse spikes and raw TSI noise
   inline int flickerTouchRead(uint8_t pin) {
-    return touchRead(pin);
+    int a = touchRead(pin);
+    int b = touchRead(pin);
+    int c = touchRead(pin);
+    if ((a <= b && b <= c) || (c <= b && b <= a)) return b;
+    if ((b <= a && a <= c) || (c <= a && a <= b)) return a;
+    return c;
   }
 
   inline void flickerTouchInit() {

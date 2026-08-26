@@ -52,6 +52,8 @@ void loop(){
 
   int newVal = myVariable.read();
   if (newVal != preVal){
+    Serial.print(0); Serial.print(" ");
+    Serial.print(1023); Serial.print(" ");
     Serial.println(newVal);
     preVal = newVal;
   }
